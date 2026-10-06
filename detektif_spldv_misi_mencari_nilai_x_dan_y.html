@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detektif SPLDV: Misi Mencari Nilai X dan Y</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b132b;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .detective-glow {
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+        .card-bg {
+            background: linear-gradient(135deg, #1c2541 0%, #0b132b 100%);
+            border: 1px solid #3a506b;
+        }
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b132b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3a506b;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
+
+    <header class="w-full py-4 px-6 bg-[#1c2541]/80 backdrop-blur border-b border-[#3a506b] flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="goToMenu()">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                <i class="fa-solid fa-user-secret"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-base md:text-lg text-cyan-400 tracking-wide">DETEKTIF SPLDV</h1>
+                <p class="text-xs text-slate-400">Misi Matematika Kelas 9</p>
+            </div>
+        </div>
+        <div id="header-stats" class="hidden items-center space-x-4 text-sm">
+            <div class="flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                <i class="fa-solid fa-heart text-red-500 animate-pulse"></i>
+                <span id="lives-display" class="font-bold text-white">3</span>
+            </div>
+            <div class="flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                <i class="fa-solid fa-star text-amber-400"></i>
+                <span id="score-display" class="font-bold text-white">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6">
+        
+        <!-- MAIN MENU SCREEN -->
+        <section id="screen-menu" class="w-full max-w-xl card-bg p-6 md:p-10 rounded-2xl shadow-2xl text-center space-y-6 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="inline-flex p-4 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-4xl md:text-5xl mb-2 gold-glow">
+                <i class="fa-solid fa-fingerprint"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h2 class="text-2xl md:text-3xl font-bold text-white tracking-wide detective-glow">Misi Mencari Nilai X dan Y</h2>
+                <p class="text-sm md:text-base text-slate-300">
+                    Bongkar sandi rahasia brankas sindikat matematika dengan menyelesaikan 5 teka-teki Sistem Persamaan Linear Dua Variabel (SPLDV).
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <button onclick="startGame()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Mulai Petualangan</span>
+                </button>
+                <button onclick="showInstructions()" class="w-full sm:w-auto px-8 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-semibold rounded-xl transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Petunjuk Bermain</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- INSTRUCTIONS SCREEN -->
+        <section id="screen-instructions" class="hidden w-full max-w-xl card-bg p-6 md:p-8 rounded-2xl shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+                <h3 class="text-xl font-bold text-cyan-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Buku Panduan Detektif</span>
+                </h3>
+                <button onclick="goToMenu()" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-sm md:text-base text-slate-300">
+                <div class="flex items-start space-x-3 bg-slate-800/50 p-3.5 rounded-xl border border-slate-700">
+                    <div class="text-cyan-400 font-bold text-lg">1.</div>
+                    <div>Tiap level menyajikan sistem persamaan linear dua variabel (SPLDV) atau soal cerita kehidupan sehari-hari.</div>
+                </div>
+                <div class="flex items-start space-x-3 bg-slate-800/50 p-3.5 rounded-xl border border-slate-700">
+                    <div class="text-cyan-400 font-bold text-lg">2.</div>
+                    <div>Temukan nilai <strong>X</strong> dan <strong>Y</strong> yang memenuhi kedua persamaan tersebut, lalu masukkan ke dalam kotak jawaban.</div>
+                </div>
+                <div class="flex items-start space-x-3 bg-slate-800/50 p-3.5 rounded-xl border border-slate-700">
+                    <div class="text-cyan-400 font-bold text-lg">3.</div>
+                    <div>Kamu memiliki <strong>3 kesempatan</strong> salah per level. Jika salah, hint atau petunjuk cara penyelesaian akan terbuka untuk membantumu!</div>
+                </div>
+                <div class="flex items-start space-x-3 bg-slate-800/50 p-3.5 rounded-xl border border-slate-700">
+                    <div class="text-cyan-400 font-bold text-lg">4.</div>
+                    <div>Gunakan metode <em>Eliminasi</em>, <em>Substitusi</em>, atau <em>Campuran</em> untuk menyelesaikannya. Selamat bertugas, Detektif!</div>
+                </div>
+            </div>
+
+            <button onclick="goToMenu()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-xl transition-all">
+                Kembali ke Menu
+            </button>
+        </section>
+
+        <!-- GAMEPLAY SCREEN -->
+        <section id="screen-game" class="hidden w-full max-w-2xl card-bg p-6 md:p-8 rounded-2xl shadow-2xl space-y-6 relative">
+            <!-- Level progress indicator -->
+            <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700 pb-3">
+                <span id="level-indicator" class="font-bold text-cyan-400 uppercase tracking-wider">Level 1 dari 5</span>
+                <span id="level-topic" class="bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded border border-cyan-800">Metode Eliminasi</span>
+            </div>
+
+            <!-- Story / Clue Box -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2 text-amber-400 text-sm font-semibold">
+                    <i class="fa-solid fa-file-shield"></i>
+                    <span>Catatan Kasus Brankas:</span>
+                </div>
+                <div id="question-story" class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-slate-200 text-sm md:text-base italic leading-relaxed">
+                    <!-- Dynamic story loaded here -->
+                </div>
+            </div>
+
+            <!-- Equations Box -->
+            <div class="bg-blue-950/40 p-5 rounded-xl border border-blue-900/50 flex flex-col items-center justify-center space-y-2 text-center shadow-inner">
+                <div class="text-xs text-cyan-400 font-semibold tracking-wider uppercase mb-1">Sistem Persamaan</div>
+                <div id="eq-1" class="text-xl md:text-2xl font-bold font-mono tracking-wide text-white"></div>
+                <div id="eq-2" class="text-xl md:text-2xl font-bold font-mono tracking-wide text-white"></div>
+            </div>
+
+            <!-- Hint Box (Hidden initially) -->
+            <div id="hint-box" class="hidden bg-amber-950/30 border border-amber-600/40 p-4 rounded-xl text-amber-200 text-sm space-y-2 animate-fadeIn">
+                <div class="flex items-center space-x-2 font-semibold text-amber-400">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Petunjuk Detektif (Hint):</span>
+                </div>
+                <p id="hint-text" class="leading-relaxed"></p>
+            </div>
+
+            <!-- Answer Inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 flex flex-col space-y-2">
+                    <label for="input-x" class="text-sm font-medium text-cyan-300 flex items-center justify-between">
+                        <span>Nilai X :</span>
+                        <span class="text-xs text-slate-400">Angka / Pecahan sederhana</span>
+                    </label>
+                    <input type="number" id="input-x" step="any" placeholder="Contoh: 3" class="w-full bg-slate-800 border border-slate-600 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-white rounded-lg px-4 py-3 outline-none font-mono text-lg transition-all">
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 flex flex-col space-y-2">
+                    <label for="input-y" class="text-sm font-medium text-cyan-300 flex items-center justify-between">
+                        <span>Nilai Y :</span>
+                        <span class="text-xs text-slate-400">Angka / Pecahan sederhana</span>
+                    </label>
+                    <input type="number" id="input-y" step="any" placeholder="Contoh: 5" class="w-full bg-slate-800 border border-slate-600 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-white rounded-lg px-4 py-3 outline-none font-mono text-lg transition-all">
+                </div>
+            </div>
+
+            <!-- Feedback Notification Banner -->
+            <div id="feedback-banner" class="hidden p-3.5 rounded-xl text-sm font-medium text-center transition-all"></div>
+
+            <!-- Action Button -->
+            <button onclick="checkAnswer()" id="btn-submit" class="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-key"></i>
+                <span>Cek Kode Brankas</span>
+            </button>
+        </section>
+
+        <!-- GAME OVER SCREEN -->
+        <section id="screen-gameover" class="hidden w-full max-w-md card-bg p-8 rounded-2xl shadow-2xl text-center space-y-6">
+            <div class="w-16 h-16 bg-red-500/20 border border-red-500/40 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto shadow-lg">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-2xl font-bold text-white">Misi Gagal, Detektif!</h3>
+                <p class="text-sm text-slate-300">Kesempatan habis dan brankas terkunci secara permanen. Jangan menyerah, asah kembali kemampuan SPLDV-mu!</p>
+            </div>
+            <div class="flex flex-col gap-3 pt-2">
+                <button onclick="restartGame()" class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-xl transition-all">
+                    Coba Lagi Misi Ini
+                </button>
+                <button onclick="goToMenu()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold rounded-xl transition-all">
+                    Menu Utama
+                </button>
+            </div>
+        </section>
+
+        <!-- VICTORY / FINAL SCREEN -->
+        <section id="screen-victory" class="hidden w-full max-w-md card-bg p-8 rounded-2xl shadow-2xl text-center space-y-6">
+            <div class="w-20 h-20 bg-amber-500/20 border border-amber-500/40 text-amber-400 rounded-full flex items-center justify-center text-4xl mx-auto gold-glow animate-bounce">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-2xl font-bold text-white">Misi Selesai! 🎉</h3>
+                <p class="text-sm text-slate-300">Kamu berhasil membongkar seluruh kode brankas sindikat dengan sukses mutlak!</p>
+            </div>
+
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-400">Total Skor Akhir:</span>
+                    <span id="final-score" class="font-bold text-cyan-400 text-lg">0</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-400">Lencana Detektif:</span>
+                    <span id="detective-badge" class="font-bold text-amber-400">Master Detektif SPLDV</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3 pt-2">
+                <button onclick="restartGame()" class="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg transition-all">
+                    Mainkan Lagi
+                </button>
+                <button onclick="goToMenu()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold rounded-xl transition-all">
+                    Menu Utama
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+        Detektif SPLDV &bull; Pembelajaran Interaktif Matematika Kelas 9 SMP &copy; 2026
+    </footer>
+
+    <script>
+        // Data Soal SPLDV (5 Level dengan tingkat kesulitan meningkat)
+        const levels = [
+            {
+                level: 1,
+                topic: "Eliminasi Sederhana",
+                story: "Markas rahasia pertama dilindungi brankas bernomor kode sederhana. Temukan nilai x dan y yang memenuhi persamaan di bawah ini:",
+                eq1: "2x + y = 7",
+                eq2: "x + y = 5",
+                x: 2,
+                y: 3,
+                hint: "Gunakan metode eliminasi dengan mengurangkan Persamaan (1) dan Persamaan (2) secara langsung untuk mengeliminasi variabel y: (2x - x) + (y - y) = 7 - 5."
+            },
+            {
+                level: 2,
+                topic: "Metode Substitusi",
+                story: "Pintu brankas kedua membutuhkan koefisien yang lebih teliti. Pecahkan sistem persamaan berikut:",
+                eq1: "x = 2y - 1",
+                eq2: "3x + y = 16",
+                x: 3,
+                y: 2,
+                hint: "Substitusikan nilai x dari Persamaan (1) yakni (2y - 1) ke dalam variabel x di Persamaan (2), sehingga menjadi 3(2y - 1) + y = 16."
+            },
+            {
+                level: 3,
+                topic: "Eliminasi dengan Perkalian",
+                story: "Sistem keamanan ketiga lebih ketat. Kamu harus menyetarakan salah satu koefisien sebelum melakukan eliminasi:",
+                eq1: "3x + 2y = 12",
+                eq2: "x + 4y = 14",
+                x: 2,
+                y: 3,
+                hint: "Kalikan Persamaan (2) dengan angka 3 menjadi 3x + 12y = 42, lalu kurangkan dengan Persamaan (1) untuk mengeliminasi variabel x."
+            },
+            {
+                level: 4,
+                topic: "Soal Cerita Harga Barang",
+                story: "Di pasar gelap, Detektif menemukan catatan transaksi: Harga 2 buku dan 1 pensil adalah Rp13.000, sedangkan harga 1 buku dan 3 pensil adalah Rp9.000. Tentukan harga 1 buku (x) dan 1 pensil (y) dalam ribuan rupiah (misal x=5 untuk 5 ribu).",
+                eq1: "2x + y = 13",
+                eq2: "x + 3y = 9",
+                x: 6,
+                y: 1,
+                hint: "Misalkan buku = x dan pensil = y. Kalikan Persamaan (2) dengan 2, lalu eliminasi x untuk mencari nilai y terlebih dahulu."
+            },
+            {
+                level: 5,
+                topic: "Soal Cerita Tantangan Akhir",
+                story: "Brankas utama sindikat! Selisih umur Ayah dan anak adalah 26 tahun, dan 5 tahun yang lalu jumlah umur keduanya adalah 40 tahun. Jika umur Ayah adalah x dan umur anak adalah y saat ini:",
+                eq1: "x - y = 26",
+                eq2: "(x - 5) + (y - 5) = 40  ->  x + y = 50",
+                x: 38,
+                y: 12,
+                hint: "Sederhanakan persamaan kedua menjadi x + y = 50. Gunakan metode eliminasi (penjumlahan/pengurangan) dengan x - y = 26."
+            }
+        ];
+
+        let currentLevelIndex = 0;
+        let lives = 3;
+        let score = 0;
+        let mistakesInCurrentLevel = 0;
+
+        // DOM Element references
+        const screenMenu = document.getElementById('screen-menu');
+        const screenInstructions = document.getElementById('screen-instructions');
+        const screenGame = document.getElementById('screen-game');
+        const screenGameover = document.getElementById('screen-gameover');
+        const screenVictory = document.getElementById('screen-victory');
+        const headerStats = document.getElementById('header-stats');
+
+        const livesDisplay = document.getElementById('lives-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const levelIndicator = document.getElementById('level-indicator');
+        const levelTopic = document.getElementById('level-topic');
+        const questionStory = document.getElementById('question-story');
+        const eq1El = document.getElementById('eq-1');
+        const eq2El = document.getElementById('eq-2');
+        const inputX = document.getElementById('input-x');
+        const inputY = document.getElementById('input-y');
+        const hintBox = document.getElementById('hint-box');
+        const hintText = document.getElementById('hint-text');
+        const feedbackBanner = document.getElementById('feedback-banner');
+
+        function showScreen(screen) {
+            screenMenu.classList.add('hidden');
+            screenInstructions.classList.add('hidden');
+            screenGame.classList.add('hidden');
+            screenGameover.classList.add('hidden');
+            screenVictory.classList.add('hidden');
+            screen.classList.remove('hidden');
+        }
+
+        function goToMenu() {
+            headerStats.classList.add('hidden');
+            headerStats.classList.remove('flex');
+            showScreen(screenMenu);
+        }
+
+        function showInstructions() {
+            showScreen(screenInstructions);
+        }
+
+        function startGame() {
+            currentLevelIndex = 0;
+            lives = 3;
+            score = 0;
+            mistakesInCurrentLevel = 0;
+            headerStats.classList.remove('hidden');
+            headerStats.classList.add('flex');
+            updateStatsUI();
+            loadLevel(currentLevelIndex);
+            showScreen(screenGame);
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function updateStatsUI() {
+            livesDisplay.textContent = lives;
+            scoreDisplay.textContent = score;
+        }
+
+        function loadLevel(index) {
+            const data = levels[index];
+            levelIndicator.textContent = `Level ${data.level} dari 5`;
+            levelTopic.textContent = data.topic;
+            questionStory.textContent = data.story;
+            eq1El.textContent = data.eq1;
+            eq2El.textContent = data.eq2;
+
+            inputX.value = '';
+            inputY.value = '';
+            hintBox.classList.add('hidden');
+            hintText.textContent = data.hint;
+            feedbackBanner.classList.add('hidden');
+            feedbackBanner.textContent = '';
+            mistakesInCurrentLevel = 0;
+
+            // Enable inputs
+            inputX.disabled = false;
+            inputY.disabled = false;
+        }
+
+        function checkAnswer() {
+            const valX = parseFloat(inputX.value);
+            const valY = parseFloat(inputY.value);
+
+            if (isNaN(valX) || isNaN(valY)) {
+                showFeedback("Harap isi nilai X dan Y dengan angka yang valid!", "warning");
+                return;
+            }
+
+            const currentData = levels[currentLevelIndex];
+
+            // Toleransi floating point tipis
+            const isXCorrect = Math.abs(valX - currentData.x) < 0.01;
+            const isYCorrect = Math.abs(valY - currentData.y) < 0.01;
+
+            if (isXCorrect && isYCorrect) {
+                // Jawaban Benar
+                let levelScoreBonus = 20 - (mistakesInCurrentLevel * 5);
+                if (levelScoreBonus < 5) levelScoreBonus = 5;
+                score += levelScoreBonus;
+                updateStatsUI();
+
+                showFeedback("Brankas Terbuka! Jawaban Anda Tepat Sekali. 🔓✨", "success");
+
+                // Disable inputs temporarily
+                inputX.disabled = true;
+                inputY.disabled = true;
+
+                setTimeout(() => {
+                    currentLevelIndex++;
+                    if (currentLevelIndex < levels.length) {
+                        loadLevel(currentLevelIndex);
+                    } else {
+                        showVictoryScreen();
+                    }
+                }, 1500);
+
+            } else {
+                // Jawaban Salah
+                mistakesInCurrentLevel++;
+                lives--;
+                updateStatsUI();
+
+                if (lives <= 0) {
+                    showScreen(screenGameover);
+                } else {
+                    showFeedback(`Kode Salah! Sisa Kesempatan: ${lives}. Petunjuk telah dibuka! ❌`, "error");
+                    hintBox.classList.remove('hidden');
+                    
+                    // Shake animation effect on inputs
+                    inputX.classList.add('border-red-500');
+                    inputY.classList.add('border-red-500');
+                    setTimeout(() => {
+                        inputX.classList.remove('border-red-500');
+                        inputY.classList.remove('border-red-500');
+                    }, 500);
+                }
+            }
+        }
+
+        function showFeedback(message, type) {
+            feedbackBanner.classList.remove('hidden', 'bg-emerald-900/80', 'text-emerald-300', 'border-emerald-600', 'bg-red-900/80', 'text-red-300', 'border-red-600', 'bg-amber-900/80', 'text-amber-300', 'border-amber-600');
+            
+            if (type === 'success') {
+                feedbackBanner.classList.add('bg-emerald-900/80', 'text-emerald-300', 'border', 'border-emerald-600');
+            } else if (type === 'error') {
+                feedbackBanner.classList.add('bg-red-900/80', 'text-red-300', 'border', 'border-red-600');
+            } else {
+                feedbackBanner.classList.add('bg-amber-900/80', 'text-amber-300', 'border', 'border-amber-600');
+            }
+            feedbackBanner.textContent = message;
+        }
+
+        function showVictoryScreen() {
+            headerStats.classList.add('hidden');
+            headerStats.classList.remove('flex');
+            document.getElementById('final-score').textContent = score;
+            
+            let badgeTitle = "Detektif Pemula";
+            if (score >= 90) badgeTitle = "Master Detektif Legend";
+            else if (score >= 70) badgeTitle = "Detektif Senior Teladan";
+            
+            document.getElementById('detective-badge').textContent = badgeTitle;
+            showScreen(screenVictory);
+        }
+
+        // Allow pressing Enter key to check answer
+        inputX.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+        inputY.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+    </script>
+</body>
+</html>
